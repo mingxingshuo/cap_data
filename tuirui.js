@@ -6,10 +6,32 @@ var zlib = require('zlib');
 
 var cookie_string;
 
+(function() {
+    setInterval(function() {
+        get_data(function(data){
+            let dataTotal = data.data, 
+                date = dataTotal.date;
+                forDate(date);
+                forDate(date);
+            let result = {
+                total: dataTotal[date[6] + '_Total'],
+                bannerConsume: dataTotal.Bn[6],
+                screenConsume: dataTotal.Cp[6],
+                clickConsume: dataTotal.Dj[6],
+                timeStamp: Date.now()
+            };
+            console.log('result', result)
+        })
+    }, 15*60*1000)
+})()
 
-get_data(function(data){
-	console.log(data)
-})
+function forDate(date) {
+    for (var i = 0; i < date.length; i++) {
+        var reg = new RegExp("-");
+        var a = date[i].replace(reg,"");
+        date[i] = a
+    }
+}
 
 function asy_zip(buffer){
 	return new Promise((resolve, reject) => {
@@ -27,6 +49,7 @@ function get_cookie(){
 		.then(function (body) {
 		  cookie_string = j.getCookieString(url)
 		  resolve()
+          console.log('j', j)
 		})
 		.catch(function (err) { 
 			reject(err)
@@ -64,7 +87,7 @@ async function login_byCookie(...func){
 	cookie_string = j.getCookieString(url)
 	body = await asy_zip(body)
 	console.log('------login-----')
-	console.log(body)
+	// console.log('body1111', body)
 
 	console.log('------to do func-------')
 	if(func.length==1){
@@ -99,7 +122,7 @@ async function get_data(cb){
 	var body = await rp(options)
 	body = await asy_zip(body)
 	console.log('--------body--------')
-	console.log(body)
+	// console.log(body)
 	var data ;
 	if(isJSON(body)){
 		data = JSON.parse(body)
