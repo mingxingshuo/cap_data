@@ -2,6 +2,7 @@ const rp = require('request-promise-any')
 const async = require('async');
 const cheerio = require('cheerio')
 const schedule = require("node-schedule");
+const daishuModel = require('../model/daishu')
 var j = rp.jar()
 var cookie_string;
 
@@ -10,9 +11,9 @@ var cookie_string;
 //     console.log(data)
 // })
 
-get_link(0, function (data) {
-    console.log(data)
-})
+// get_link(0, function (data) {
+//     console.log(data)
+// })
 
 function get_cookie() {
     return new Promise((resolve, reject) => {
@@ -114,19 +115,37 @@ async function get_link(offset, cb) {
     var body = await rp(options)
     var data;
     var flag = true
+    var arr = []
     if (isJSON(body)) {
         data = JSON.parse(body)
         for (let d of data.rows) {
             if (parseInt(Date.now() / 1000) - d.createtime <= 48 * 3600) {
                 let total = await get_linkdata(d.id)
-                console.log(d.id, 'https://wx8a66d703c33ea318.ziread.cn/t/' + d.id, total.count, total.count_pay, parseFloat(d.money).toFixed(2), d.createtime, parseInt(Date.now() / 1000), '---------save')
+                let savedata = {
+                    id: d.id,
+                    url: 'https://wx8a66d703c33ea318.ziread.cn/t/' + d.id,
+                    count_order: total.count_order,
+                    count_pay: total.count_pay,
+                    money: parseFloat(d.money).toFixed(2),
+                    createtime: d.createtime,
+                    time: timestamp_date() / 1000
+                }
+                arr.push(savedata)
             } else if (parseInt(Date.now() / 1000) - d.createtime <= 7 * 24 * 3600) {
-                console.log(d.id, 'https://wx8a66d703c33ea318.ziread.cn/t/' + d.id, parseFloat(d.money).toFixed(2), d.createtime, parseInt(Date.now() / 1000), '---------save')
+                let savedata = {
+                    id: d.id,
+                    url: 'https://wx8a66d703c33ea318.ziread.cn/t/' + d.id,
+                    money: parseFloat(d.money).toFixed(2),
+                    createtime: d.createtime,
+                    time: timestamp_date() / 1000
+                }
+                arr.push(savedata)
             } else {
                 flag = false
                 break
             }
         }
+        await daishuModel.create(arr)
         if (flag) {
             get_link(offset + 10, cb)
         } else {
@@ -179,7 +198,7 @@ async function get_linkdata(id) {
         data = JSON.parse(body)
         data_pay = JSON.parse(body_pay)
         return new Promise((resolve, reject) => {
-            resolve({count: data.total, count_pay: data_pay.total})
+            resolve({count_order: data.total, count_pay: data_pay.total})
         })
     } else {
         await login_byCookie(arguments.callee)
@@ -201,12 +220,19 @@ function isJSON(str) {
     }
 }
 
-// var rule = new schedule.RecurrenceRule();
-// var times = [1, 6, 11, 16, 21, 26, 31, 36, 41, 46, 51, 56];
-// rule.minute = times;
-// var j = schedule.scheduleJob(rule, function () {
-//     console.log('更新统计信息');
-//     get_link(0, function (data) {
-//         console.log(data)
-//     })
-// });
+function timestamp_date() {
+    var date = new Date()
+    var ms = date.getMinutes()
+    var set_ms = 15 * parseInt(ms / 15)
+    return date.setMinutes(set_ms, 0, 0)
+}
+
+var rule = new schedule.RecurrenceRule();
+var times = [0, 15, 30, 45];
+rule.minute = times;
+schedule.scheduleJob(rule, function () {
+    console.log('更新统计信息');
+    get_link(0, function (data) {
+        console.log(data)
+    })
+});
