@@ -10,7 +10,7 @@ var DaishuSchema = new Schema({
     count_pay:Number, //付款数量
     money:Number,  //付款金额
     createtime:Number, //创建时间
-    time:Number //统计时间
+    time:Number //记录时间
 });
 
 var DaishuModel = db.model('Daishu', DaishuSchema);
