@@ -128,7 +128,7 @@ async function get_link(offset, cb) {
                     count_pay: total.count_pay,
                     money: parseFloat(d.money).toFixed(2),
                     createtime: d.createtime,
-                    time: timestamp_date() / 1000
+                    time: timestamp_date()
                 }
                 arr.push(savedata)
             } else if (parseInt(Date.now() / 1000) - d.createtime <= 7 * 24 * 3600) {
@@ -137,7 +137,7 @@ async function get_link(offset, cb) {
                     url: 'https://wx8a66d703c33ea318.ziread.cn/t/' + d.id,
                     money: parseFloat(d.money).toFixed(2),
                     createtime: d.createtime,
-                    time: timestamp_date() / 1000
+                    time: timestamp_date()
                 }
                 arr.push(savedata)
             } else {
@@ -231,7 +231,7 @@ var rule = new schedule.RecurrenceRule();
 var times = [0, 15, 30, 45];
 rule.minute = times;
 schedule.scheduleJob(rule, function () {
-    console.log('更新统计信息');
+    console.log('创建袋鼠统计信息');
     get_link(0, function (data) {
         console.log(data)
     })
