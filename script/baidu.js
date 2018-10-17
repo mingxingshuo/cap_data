@@ -69,9 +69,9 @@ async function get_data(id,name,createtime) {
             id: id,
             url:name,
             status: 1,
-            pv: data.result.fields.pv_count || 0,
-            uv: data.result.fields.visitor_count || 0,
-            ip_count: data.result.fields.ip_count || 0,
+            pv: data.result.items[1][0] || 0,
+            uv: data.result.items[2][0] || 0,
+            ip_count: data.result.items[3][0] || 0,
             createtime:createtime,
             time: timestamp_date()
         }
@@ -79,8 +79,6 @@ async function get_data(id,name,createtime) {
     }
     await baiduModel.create(arr)
 }
-
-get_sites();
 
 function timestamp_date() {
     var date = new Date()
