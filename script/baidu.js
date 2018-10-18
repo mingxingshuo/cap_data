@@ -69,9 +69,9 @@ async function get_data(id,name,createtime) {
             id: id,
             url:name,
             status: 1,
-            pv: data.result.sum[0][0] || 0,
-            uv: data.result.sum[0][1] || 0,
-            ip_count: data.result.sum[0][2] || 0,
+            pv: parseInt(data.result.sum[0][0]) || 0,
+            uv: parseInt(data.result.sum[0][1]) || 0,
+            ip_count: parseInt(data.result.sum[0][2]) || 0,
             createtime:createtime,
             time: timestamp_date()
         }
