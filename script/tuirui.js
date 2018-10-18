@@ -1,29 +1,12 @@
 const rp = require('request-promise-any')
 const async = require('async');
 const cheerio = require('cheerio')
+const schedule = require("node-schedule");
+const consumeModel = require('../model/consume')
 var j = rp.jar()
 var zlib = require('zlib');
 
 var cookie_string;
-
-(function() {
-    setInterval(function() {
-        get_data(function(data){
-            let dataTotal = data.data, 
-                date = dataTotal.date;
-                forDate(date);
-                forDate(date);
-            let result = {
-                total: dataTotal[date[6] + '_Total'],
-                bannerConsume: dataTotal.Bn[6],
-                screenConsume: dataTotal.Cp[6],
-                clickConsume: dataTotal.Dj[6],
-                timeStamp: Date.now()
-            };
-            console.log('result', result)
-        })
-    }, 15*60*1000)
-})()
 
 function forDate(date) {
     for (var i = 0; i < date.length; i++) {
@@ -49,7 +32,6 @@ function get_cookie(){
 		.then(function (body) {
 		  cookie_string = j.getCookieString(url)
 		  resolve()
-          console.log('j', j)
 		})
 		.catch(function (err) { 
 			reject(err)
@@ -122,7 +104,6 @@ async function get_data(cb){
 	var body = await rp(options)
 	body = await asy_zip(body)
 	console.log('--------body--------')
-	// console.log(body)
 	var data ;
 	if(isJSON(body)){
 		data = JSON.parse(body)
@@ -147,3 +128,34 @@ function isJSON(str) {
     }
 }
 
+function timestamp_date() {
+    var date = new Date()
+    var ms = date.getMinutes()
+    var set_ms = 15 * parseInt(ms / 15)
+    return date.setMinutes(set_ms, 0, 0)
+}
+
+var rule = new schedule.RecurrenceRule();
+var times = [0, 15, 30, 45];
+rule.minute = times;
+schedule.scheduleJob(rule, function () {
+    console.log('更新推锐统计信息');
+    get_data(function(data){
+        let dataTotal = data.data, 
+            date = dataTotal.date;
+            forDate(date);
+            forDate(date);
+        var len = date.length-1;
+        var dataList = [];
+        let result = {
+            platform: 0,
+            consume: dataTotal.Bn[len] + dataTotal.Cp[len] + dataTotal.Dj[len],
+            bannerConsume: dataTotal.Bn[len],
+            screenConsume: dataTotal.Cp[len],
+            clickConsume: dataTotal.Dj[len],
+            timeStamp: timestamp_date()
+        };
+        dataList.push(result)
+        consumeModel.create(dataList)
+    })
+});
