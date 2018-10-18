@@ -16,6 +16,7 @@ function get_data() {
                 for (var i = 0; i < parsedData.data.advert_list.length; i++) {
                     let that = parsedData.data.advert_list[i]
                     result = {
+                        platform: 5,
                         amount: parsedData.data.account_amount,
                         adId: that.id,
                         showCount: that.count_pv,
