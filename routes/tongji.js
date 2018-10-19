@@ -63,6 +63,6 @@ schedule.scheduleJob(rule, function () {
     console.log('创建统计信息');
     tongji()
 });
-tongji()
+// tongji()
 
 module.exports = router;
