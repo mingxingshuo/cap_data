@@ -5,6 +5,7 @@ var db = mongoose.createConnection(connect_url);
 
 var TongjiSchema = new Schema({
 	url:String,
+    out_url:String,
     pv:Number,  //pv数量
     uv:Number, //uv数量
     ip_count:Number,  //ip数量
@@ -12,6 +13,7 @@ var TongjiSchema = new Schema({
     count_pay:Number, //付款数量
     money:Number, //金额
     cost:Number, //成本
+    back:Number, //回本率
     platform:Number,
     createtime:Number //创建时间
 });

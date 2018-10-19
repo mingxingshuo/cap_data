@@ -24,6 +24,7 @@ async function tongji() {
         let cost = cost_total/count
         let data = {
             url:link.url,
+            url:link.out_url,
             pv:Baidu[0].pv,
             uv:Baidu[0].uv,
             ip_count:Baidu[0].ip_count,
