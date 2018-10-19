@@ -9,7 +9,7 @@ var bodyParser = require('body-parser');
 var link = require('./routes/link');
 var cost = require('./routes/cost');
 var tongji = require('./routes/tongji');
-
+//var statistics = require('./routes/statistics');
 var app = express();
 
 app.all('*', function(req, res, next) {
@@ -44,6 +44,7 @@ app.use(session({
 app.use('/link', link);
 app.use('/cost', cost);
 app.use('/tongji', tongji);
+//app.use('/statistics', statistics);
 
 app.use(express.static(path.join(__dirname, 'public')));
 
