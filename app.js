@@ -6,6 +6,10 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
+var link = require('./routes/link');
+var cost = require('./routes/cost');
+var tongji = require('./routes/tongji');
+
 var app = express();
 
 app.all('*', function(req, res, next) {
@@ -37,7 +41,9 @@ app.use(session({
     saveUninitialized: true,
 }));
 
-// app.use('/', index);
+app.use('/link', link);
+app.use('/cost', cost);
+app.use('/tongji', tongji);
 
 app.use(express.static(path.join(__dirname, 'public')));
 

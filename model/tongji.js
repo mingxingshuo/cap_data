@@ -3,16 +3,16 @@ var Schema = mongoose.Schema;
 var connect_url = require('../conf/proj.json').mongodb;
 var db = mongoose.createConnection(connect_url); 
 
-var DaishuSchema = new Schema({
-	id:Number,
+var TongjiSchema = new Schema({
 	url:String,
+    pv:Number,  //pv数量
+    uv:Number, //uv数量
+    ip_count:Number,  //ip数量
     count_order:Number,  //订单数量
     count_pay:Number, //付款数量
-    money:Number,  //付款金额
-    platform:Number, //6袋鼠
-    createtime:Number, //创建时间
-    time:Number //记录时间
+    money:Number,
+    createtime:Number //创建时间
 });
 
-var DaishuModel = db.model('Daishu', DaishuSchema);
-module.exports = DaishuModel;
+var TongjiModel = db.model('Tongji', TongjiSchema);
+module.exports = TongjiModel;

@@ -1,7 +1,6 @@
 var rp = require('request-promise-any');
 const schedule = require("node-schedule");
 const baiduModel = require('../model/baidu')
-
 async function get_sites() {
     var url = 'https://api.baidu.com/json/tongji/v1/ReportService/getSiteList'
     var options = {
