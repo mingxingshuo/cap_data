@@ -17,13 +17,13 @@ async function tongji() {
     let arr = []
     let links = await LinkModel.find()
     for (let link of links) {
-        console.log(link,'--------------link')
+        console.log(link, '--------------link')
         let Baidu = await BaiduModel.find({url: link.out_url}).limit(1).sort({createtime: -1})
         let Daishu = await DaishuModel.find({url: link.url}).limit(1).sort({createtime: -1})
-        console.log(Baidu,'--------------Baidu')
-        console.log(Daishu,'--------------Daishu')
+        console.log(Baidu, '--------------Baidu')
+        console.log(Daishu, '--------------Daishu')
         let Cost = await CostModel.find({url: link.url}).limit(1).sort({createAt: -1})
-        console.log(Cost[0],'--------------Cost')
+        console.log(Cost[0], '--------------Cost')
         // let Cost = await CostModel.find({url: link.url}).limit(2).sort({createAt: -1})
         // console.log(Cost,'--------------Cost')
         // console.log((Cost[0].createtime - Cost[1].createtime),'---------------')
@@ -32,20 +32,21 @@ async function tongji() {
         // let cost = (cost_total/count).toFixed(2)
         // console.log(count,cost,'--------------cost')
         let data = {
-            url:link.url,
-            out_url:link.out_url,
-            qudao:link.qudao,
-            fuwuhao:link.fuwuhao,
-            pv:Baidu[0].pv,
-            uv:Baidu[0].uv,
-            ip_count:Baidu[0].ip_count,
-            count_order:Daishu[0].count_order||0,
-            count_pay:Daishu[0].count_pay||0,
-            money:Daishu[0].money,
-            cost:Cost[0].cost,
-            back:(Daishu[0].money/Cost[0].cost).toFixed(2),
-            platform:link.platform,
-            createtime:timestamp_date()
+            url: link.url,
+            out_url: link.out_url,
+            qudao: link.qudao,
+            fuwuhao: link.fuwuhao,
+            pv: Baidu[0].pv,
+            uv: Baidu[0].uv,
+            ip_count: Baidu[0].ip_count,
+            count_order: Daishu[0].count_order || 0,
+            count_pay: Daishu[0].count_pay || 0,
+            yuedu: Daishu[0].yuedu || 0,
+            money: Daishu[0].money,
+            cost: Cost[0].cost,
+            back: (Daishu[0].money / Cost[0].cost).toFixed(2),
+            platform: link.platform,
+            createtime: timestamp_date()
         }
         arr.push(data)
     }
@@ -66,6 +67,6 @@ schedule.scheduleJob(rule, function () {
     console.log('创建统计信息');
     tongji()
 });
-tongji()
+// tongji()
 
 module.exports = router;

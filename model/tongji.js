@@ -13,6 +13,7 @@ var TongjiSchema = new Schema({
     ip_count:Number,  //ip数量
     count_order:Number,  //订单数量
     count_pay:Number, //付款数量
+    yuedu:Number,
     money:Number, //金额
     cost:Number, //成本
     back:Number, //回本率

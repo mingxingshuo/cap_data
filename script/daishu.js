@@ -125,6 +125,7 @@ async function get_link(offset, cb) {
                 let savedata = {
                     id: d.id,
                     url: d.short_url,
+                    yuedu:d.uv,
                     count_order: total.count_order,
                     count_pay: total.count_pay,
                     money: parseFloat(d.money).toFixed(2),
@@ -137,6 +138,7 @@ async function get_link(offset, cb) {
                 let savedata = {
                     id: d.id,
                     url: d.short_url,
+                    yuedu:d.uv,
                     count_order: 0,
                     count_pay: 0,
                     money: parseFloat(d.money).toFixed(2),
