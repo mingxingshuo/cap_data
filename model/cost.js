@@ -6,7 +6,11 @@ var db = mongoose.createConnection(connect_url);
 var CostSchema = new Schema({
     url:String,
     cost:Number,
-    createtime:Number
+    createtime:Number,
+    createAt: {
+        type: Number,
+        default: Date.now
+    }
 });
 
 var CostModel = db.model('Cost', CostSchema);

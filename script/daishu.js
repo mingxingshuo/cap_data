@@ -124,7 +124,7 @@ async function get_link(offset, cb) {
                 let total = await get_linkdata(d.id)
                 let savedata = {
                     id: d.id,
-                    url: 'https://wx8a66d703c33ea318.klunf.com/t/' + d.id,
+                    url: d.short_url,
                     count_order: total.count_order,
                     count_pay: total.count_pay,
                     money: parseFloat(d.money).toFixed(2),
@@ -136,7 +136,9 @@ async function get_link(offset, cb) {
             } else if (parseInt(Date.now() / 1000) - d.createtime <= 7 * 24 * 3600) {
                 let savedata = {
                     id: d.id,
-                    url: 'https://wx8a66d703c33ea318.klunf.com/t/' + d.id,
+                    url: d.short_url,
+                    count_order: 0,
+                    count_pay: 0,
                     money: parseFloat(d.money).toFixed(2),
                     platform:6,
                     createtime: d.createtime * 1000,
@@ -239,6 +241,3 @@ schedule.scheduleJob(rule, function () {
         console.log(data)
     })
 });
-get_link(0, function (data) {
-    console.log(data)
-})

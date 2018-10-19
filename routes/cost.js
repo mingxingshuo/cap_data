@@ -4,11 +4,12 @@ var CostModel = require('../model/cost');
 
 router.post('/create', async(req, res, next) => {
     let url = req.body.url
-    let cost = req.body.cost || 0
+    let cost = req.body.cost
+    let createtime = req.body.createtime
     let data = {
         url: url,
         cost: cost,
-        createtime: timestamp_date()
+        createtime: createtime
     }
     let doc = await CostModel.create(data)
     if (doc) {
@@ -17,12 +18,5 @@ router.post('/create', async(req, res, next) => {
         res.send({err: '创建失败'})
     }
 })
-
-function timestamp_date() {
-    var date = new Date()
-    var ms = date.getMinutes()
-    var set_ms = 15 * parseInt(ms / 15)
-    return date.setMinutes(set_ms, 0, 0)
-}
 
 module.exports = router;

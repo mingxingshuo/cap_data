@@ -7,7 +7,8 @@ var LinkSchema = new Schema({
 	url:String,
     out_url:String,
     platform:Number,
-    createtime:Number //创建时间
+    createtime:String, //创建时间
+    time:Number
 });
 
 var LinkModel = db.model('Link', LinkSchema);

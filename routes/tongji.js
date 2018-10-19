@@ -22,23 +22,25 @@ async function tongji() {
         let Daishu = await DaishuModel.find({url: link.url}).limit(1).sort({createtime: -1})
         console.log(Baidu,'--------------Baidu')
         console.log(Daishu,'--------------Daishu')
-        let Cost = await CostModel.find({url: link.url}).limit(2).sort({createtime: -1})
+        let Cost = await CostModel.find({url: link.url}).limit(2).sort({createAt: -1})
         console.log(Cost,'--------------Cost')
         console.log((Cost[0].createtime - Cost[1].createtime),'---------------')
         let cost_total = Cost[0].cost - Cost[1].cost
         let count = (Cost[0].createtime - Cost[1].createtime)/(15*60*1000)
         let cost = (cost_total/count).toFixed(2)
         console.log(count,cost,'--------------cost')
+        let back_rate = (Daishu[0].money/cost*100).toFixed(2)
         let data = {
             url:link.url,
             out_url:link.out_url,
             pv:Baidu[0].pv,
             uv:Baidu[0].uv,
             ip_count:Baidu[0].ip_count,
-            count_order:Daishu[0].count_order,
-            count_pay:Daishu[0].count_pay,
+            count_order:Daishu[0].count_order||0,
+            count_pay:Daishu[0].count_pay||0,
             money:Daishu[0].money,
             cost:cost,
+            back_rate:back_rate,
             platform:link.platform,
             createtime:timestamp_date()
         }
@@ -61,6 +63,6 @@ schedule.scheduleJob(rule, function () {
     console.log('创建统计信息');
     tongji()
 });
-// tongji()
+tongji()
 
 module.exports = router;

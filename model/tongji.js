@@ -13,7 +13,7 @@ var TongjiSchema = new Schema({
     count_pay:Number, //付款数量
     money:Number, //金额
     cost:Number, //成本
-    back:Number, //回本率
+    back_rate:Number, //回本率
     platform:Number,
     createtime:Number //创建时间
 });
