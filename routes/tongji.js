@@ -27,7 +27,7 @@ async function tongji() {
         console.log((Cost[0].createtime - Cost[1].createtime),'---------------')
         let cost_total = Cost[0].cost - Cost[1].cost
         let count = (Cost[0].createtime - Cost[1].createtime)/(15*60*1000)
-        let cost = cost_total/count
+        let cost = (cost_total/count).toFixed(2)
         console.log(count,cost,'--------------cost')
         let data = {
             url:link.url,
