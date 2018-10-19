@@ -9,7 +9,7 @@ const TongjiModel = require('../model/tongji')
 
 router.get('/', async(req, res, next) => {
     let url = req.query.url
-    let doc = await CostModel.find({url: url}).limit(2).sort({createtime: -1})
+    let doc = await TongjiModel.find({url: url}).limit(192).sort({createtime: -1})
     res.send({data: doc})
 })
 
