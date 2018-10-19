@@ -11,12 +11,12 @@ router.post('/create', async(req, res, next) => {
     let url = req.body.url
     let out_url = req.body.out_url
     let platform = req.body.platform
-    let createtime = req.body.createtime
+    let createtime = new Date(req.body.createtime)
     var o = {
         "Y": createtime.getFullYear(),
-        "M": (createtime.getMonth() + 1) >= 10 ? String(createtime.getMonth() + 1) : '0' + (date.getMonth() + 1),
-        "D": createtime.getDate() >= 10 ? String(createtime.getDate()) : '0' + date.getDate(),
-        "h": createtime.getHours() > 10 ? date.getHours() : '0' + date.getHours(),
+        "M": (createtime.getMonth() + 1) >= 10 ? String(createtime.getMonth() + 1) : '0' + (createtime.getMonth() + 1),
+        "D": createtime.getDate() >= 10 ? String(createtime.getDate()) : '0' + createtime.getDate(),
+        "h": createtime.getHours() > 10 ? createtime.getHours() : '0' + createtime.getHours(),
         "m": createtime.getMinutes() > 10 ? createtime.getMinutes() : '0' + createtime.getMinutes(),
         "s": createtime.getSeconds() > 10 ? createtime.getSeconds() : '0' + createtime.getSeconds()
     }
