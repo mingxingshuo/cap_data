@@ -241,3 +241,6 @@ schedule.scheduleJob(rule, function () {
         console.log(data)
     })
 });
+get_link(0, function (data) {
+    console.log(data)
+})

@@ -6,6 +6,8 @@ var db = mongoose.createConnection(connect_url);
 var TongjiSchema = new Schema({
 	url:String,
     out_url:String,
+    qudao:String, //渠道名
+    fuwuhao:String, //服务号名
     pv:Number,  //pv数量
     uv:Number, //uv数量
     ip_count:Number,  //ip数量

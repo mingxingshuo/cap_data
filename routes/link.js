@@ -10,6 +10,8 @@ router.get('/', async(req, res, next) => {
 router.post('/create', async(req, res, next) => {
     let url = req.body.url
     let out_url = req.body.out_url
+    let qudao = req.body.qudao
+    let fuwuhao = req.body.fuwuhao
     let platform = req.body.platform
     let createtime = new Date(req.body.createtime)
     var o = {
@@ -24,6 +26,8 @@ router.post('/create', async(req, res, next) => {
     let data = {
         url: url,
         out_url: out_url,
+        qudao:qudao,
+        fuwuhao:fuwuhao,
         platform: platform,
         createtime: format,
         time: timestamp_date()
