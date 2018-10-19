@@ -14,6 +14,7 @@ router.get('/', async(req, res, next) => {
 })
 
 async function tongji() {
+    let arr = []
     let links = await LinkModel.find()
     for (let link of links) {
         let Baidu = await BaiduModel.find({url: link.out_url}).limit(1).sort({createtime: -1})
@@ -24,7 +25,7 @@ async function tongji() {
         let cost = cost_total/count
         let data = {
             url:link.url,
-            url:link.out_url,
+            out_url:link.out_url,
             pv:Baidu[0].pv,
             uv:Baidu[0].uv,
             ip_count:Baidu[0].ip_count,
@@ -35,8 +36,9 @@ async function tongji() {
             platform:link.platform,
             createtime:timestamp_date()
         }
+        arr.push(data)
     }
-    let doc = await TongjiModel.create(data)
+    await TongjiModel.create(arr)
 }
 
 function timestamp_date() {
