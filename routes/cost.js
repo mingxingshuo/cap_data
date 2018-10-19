@@ -4,10 +4,10 @@ var CostModel = require('../model/cost');
 
 router.post('/create', async(req, res, next) => {
     let url = req.body.url
-    let money = req.body.money || 0
+    let cost = req.body.cost || 0
     let data = {
         url: url,
-        money: money,
+        cost: cost,
         createtime: timestamp_date()
     }
     let doc = await CostModel.create(data)
