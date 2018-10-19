@@ -119,11 +119,12 @@ async function get_link(offset, cb) {
     if (isJSON(body)) {
         data = JSON.parse(body)
         for (let d of data.rows) {
+            console.log(data,'daishu data---------------')
             if (parseInt(Date.now() / 1000) - d.createtime <= 48 * 3600) {
                 let total = await get_linkdata(d.id)
                 let savedata = {
                     id: d.id,
-                    url: 'https://wx8a66d703c33ea318.ziread.cn/t/' + d.id,
+                    url: 'https://wx8a66d703c33ea318.klunf.com/t/' + d.id,
                     count_order: total.count_order,
                     count_pay: total.count_pay,
                     money: parseFloat(d.money).toFixed(2),
@@ -135,7 +136,7 @@ async function get_link(offset, cb) {
             } else if (parseInt(Date.now() / 1000) - d.createtime <= 7 * 24 * 3600) {
                 let savedata = {
                     id: d.id,
-                    url: 'https://wx8a66d703c33ea318.ziread.cn/t/' + d.id,
+                    url: 'https://wx8a66d703c33ea318.klunf.com/t/' + d.id,
                     money: parseFloat(d.money).toFixed(2),
                     platform:6,
                     createtime: d.createtime * 1000,
@@ -159,7 +160,7 @@ async function get_link(offset, cb) {
 }
 
 async function get_linkdata(id) {
-    // console.log('-------get_linkdata func-------\r\n')
+    console.log('-------get_linkdata func-------\r\n')
     var url = 'https://www.ziread.cn/admin/orders/index?ids=' + id + 'ref=addtabs&_=' + Date.now()
     var url_pay = 'https://www.ziread.cn/admin/orders/index?ids=' + id + '&ref=addtabs&filter=%7B%22state%22%3A%221%22%7D&op=%7B%22state%22%3A%22%3D%22%7D&_=' + Date.now()
     var options = {
@@ -238,3 +239,6 @@ schedule.scheduleJob(rule, function () {
         console.log(data)
     })
 });
+get_link(0, function (data) {
+    console.log(data)
+})

@@ -17,12 +17,18 @@ async function tongji() {
     let arr = []
     let links = await LinkModel.find()
     for (let link of links) {
+        console.log(link,'--------------link')
         let Baidu = await BaiduModel.find({url: link.out_url}).limit(1).sort({createtime: -1})
         let Daishu = await DaishuModel.find({url: link.url}).limit(1).sort({createtime: -1})
+        console.log(Baidu,'--------------Baidu')
+        console.log(Daishu,'--------------Daishu')
         let Cost = await CostModel.find({url: link.url}).limit(2).sort({createtime: -1})
+        console.log(Cost,'--------------Cost')
+        console.log((Cost[0].createtime - Cost[1].createtime),'---------------')
         let cost_total = Cost[0].cost - Cost[1].cost
-        let count = (Cost[0].createtime - Cost[1].createtime)/15*60*1000
+        let count = (Cost[0].createtime - Cost[1].createtime)/(15*60*1000)
         let cost = cost_total/count
+        console.log(count,cost,'--------------cost')
         let data = {
             url:link.url,
             out_url:link.out_url,
@@ -55,5 +61,6 @@ schedule.scheduleJob(rule, function () {
     console.log('创建统计信息');
     tongji()
 });
+// tongji()
 
 module.exports = router;
