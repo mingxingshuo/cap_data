@@ -9,7 +9,7 @@ const TongjiModel = require('../model/tongji')
 
 router.get('/', async(req, res, next) => {
     let url = req.query.url
-    let doc = await TongjiModel.find({url: url}).limit(192).sort({createtime: -1})
+    let doc = await TongjiModel.find({url: url}).limit(1).sort({createtime: -1})
     res.send({data: doc})
 })
 
@@ -31,7 +31,6 @@ async function tongji() {
         // let count = (Cost[0].createtime - Cost[1].createtime)/(15*60*1000)
         // let cost = (cost_total/count).toFixed(2)
         // console.log(count,cost,'--------------cost')
-        let back_rate = (Daishu[0].money/Cost[0].cost).toFixed(2)
         let data = {
             url:link.url,
             out_url:link.out_url,
@@ -44,7 +43,7 @@ async function tongji() {
             count_pay:Daishu[0].count_pay||0,
             money:Daishu[0].money,
             cost:Cost[0].cost,
-            back_rate:(Daishu[0].money/Cost[0].cost).toFixed(2),
+            back:(Daishu[0].money/Cost[0].cost).toFixed(2),
             platform:link.platform,
             createtime:timestamp_date()
         }
