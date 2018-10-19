@@ -5,7 +5,7 @@ var db = mongoose.createConnection(connect_url);
 
 var CostSchema = new Schema({
     url:String,
-    money:Number,
+    cost:Number,
     createtime:Number
 });
 

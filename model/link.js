@@ -6,7 +6,7 @@ var db = mongoose.createConnection(connect_url);
 var LinkSchema = new Schema({
 	url:String,
     out_url:String,
-    platform:String,
+    platform:Number,
     createtime:Number //创建时间
 });
 

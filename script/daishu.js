@@ -127,6 +127,7 @@ async function get_link(offset, cb) {
                     count_order: total.count_order,
                     count_pay: total.count_pay,
                     money: parseFloat(d.money).toFixed(2),
+                    platform:6,
                     createtime: d.createtime * 1000,
                     time: timestamp_date()
                 }
@@ -136,6 +137,7 @@ async function get_link(offset, cb) {
                     id: d.id,
                     url: 'https://wx8a66d703c33ea318.ziread.cn/t/' + d.id,
                     money: parseFloat(d.money).toFixed(2),
+                    platform:6,
                     createtime: d.createtime * 1000,
                     time: timestamp_date()
                 }
