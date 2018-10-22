@@ -240,7 +240,7 @@ rule.minute = times;
 schedule.scheduleJob(rule, function () {
     console.log('创建袋鼠统计信息');
     get_link(0, function (data) {
-        console.log(data)
+        // console.log(data)
     })
 });
 // get_link(0, function (data) {

@@ -66,7 +66,7 @@ var ConsumeSchema = new Schema({
         default: ''
     },
     timeStamp: Number,         // 抓取时间
-    //createAt: Date.now()       // 创建时间
+    time: String       // 创建时间
 });
 
 var ConsumeModel = db.model('Consume', ConsumeSchema);

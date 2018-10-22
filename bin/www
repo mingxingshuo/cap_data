@@ -33,6 +33,12 @@ server.on('listening', onListening);
 
 require('../script/daishu');
 require('../script/baidu');
+require('../script/dianrui');
+require('../script/tuirui');
+require('../script/yaoqi');
+require('../script/yifei');
+require('../script/youmeng');
+require('../script/wuyou');
 /**
  * Normalize a port into a number, string, or false.
  */
