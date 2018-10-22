@@ -18,6 +18,6 @@ router.get('/', async(req, res, next) => {
         docs[i].time = format
     }
     res.send({data: docs})
-// })
+})
 
 module.exports = router;
