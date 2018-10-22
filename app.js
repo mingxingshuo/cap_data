@@ -10,7 +10,7 @@ var link = require('./routes/link');
 var cost = require('./routes/cost');
 var tongji = require('./routes/tongji');
 var consume = require('./routes/consume');
-//var statistics = require('./routes/statistics');
+var statistics = require('./routes/statistics');
 var app = express();
 
 app.all('*', function(req, res, next) {
@@ -46,7 +46,7 @@ app.use('/link', link);
 app.use('/cost', cost);
 app.use('/tongji', tongji);
 app.use('/consume', consume);
-//app.use('/statistics', statistics);
+app.use('/statistics', statistics);
 
 app.use(express.static(path.join(__dirname, 'public')));
 

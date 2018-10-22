@@ -3,9 +3,9 @@ var router = express.Router();
 
 
 
-//router.all('/*', function(req, res, next) {
-  //  res.render('statistics/index');
-//});
+router.get('/*', function(req, res, next) {
+   res.render('statistics/index');
+});
 
 
 module.exports = router;
