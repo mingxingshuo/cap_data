@@ -7,7 +7,7 @@ var CostSchema = new Schema({
     url:String,
     cost:Number,
     createtime:Number,
-    createAt: {
+    time: {
         type: Number,
         default: Date.now
     }
