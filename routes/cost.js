@@ -1,6 +1,6 @@
-var express = require('express');
-var router = express.Router();
-var CostModel = require('../model/cost');
+const express = require('express');
+const router = express.Router();
+const CostModel = require('../model/cost');
 
 router.post('/create', async(req, res, next) => {
     let url = req.body.url

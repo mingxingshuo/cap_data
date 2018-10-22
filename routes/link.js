@@ -1,6 +1,6 @@
-var express = require('express');
-var router = express.Router();
-var LinkModel = require('../model/link');
+const express = require('express');
+const router = express.Router();
+const LinkModel = require('../model/link');
 
 router.get('/', async(req, res, next) => {
     let doc = await LinkModel.find()
