@@ -38,8 +38,7 @@ async function tongji() {
         }
         arr.push(data)
     }
-    console.log(arr,'-------------arr')
-    // await TongjiModel.create(arr)
+    await TongjiModel.create(arr)
 }
 
 function timestamp_date() {
@@ -56,4 +55,4 @@ schedule.scheduleJob(rule, function () {
     console.log('创建统计信息');
     tongji()
 });
-tongji()
+// tongji()
