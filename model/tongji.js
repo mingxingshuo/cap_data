@@ -14,10 +14,12 @@ var TongjiSchema = new Schema({
     count_order:Number,  //订单数量
     count_pay:Number, //付款数量
     yuedu:Number,
-    money:Number, //金额
+    money:Number, //充值金额
     cost:Number, //成本
-    cost_time:Number, //分时成本
-    back:Number, //回本率
+    back:String, //回本率
+    today_money:Number, //今日充值
+    today_cost:Number, //今日成本
+    today_back:String, //动态回本率
     platform:Number,
     createtime:Number //创建时间
 });
