@@ -16,6 +16,7 @@ var TongjiSchema = new Schema({
     yuedu:Number,
     money:Number, //金额
     cost:Number, //成本
+    cost_time:Number, //分时成本
     back:Number, //回本率
     platform:Number,
     createtime:Number //创建时间
