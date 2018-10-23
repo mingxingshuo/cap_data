@@ -23,11 +23,9 @@ async function tongji() {
             url: link.url,
             createtime: {$lt: date_zero()}
         }).limit(1).sort({createtime: -1})
-        let today_cost = 0
-        if (yesterdayCost) {
+        let today_cost = Cost[0].cost || 0
+        if (Cost[0].cost && yesterdayCost) {
             today_cost = Cost[0].cost - yesterdayCost[0].cost
-        } else {
-            today_cost = Cost[0].cost
         }
         console.log(Cost, '--------------Cost')
         console.log(yesterdayCost, '--------------yesterday_Cost')
@@ -35,16 +33,16 @@ async function tongji() {
 
         let count_order = Daishu[0].count_order || 0
         let count_pay = Daishu[0].count_pay || 0
-        let pay_rate = '0'
-        if (count_pay) {
+        let pay_rate = '0.00%'
+        if (count_pay && count_order) {
             pay_rate = (count_pay / count_order * 100).toFixed(2) + '%'
         }
-        let back = '0'
-        if (Cost[0].cost) {
+        let back = '0.00%'
+        if (Daishu[0].money && Cost[0].cost) {
             back = (Daishu[0].money / Cost[0].cost * 100).toFixed(2) + '%'
         }
-        let today_back = '0'
-        if (today_cost) {
+        let today_back = '0.00%'
+        if (today_money && today_cost) {
             today_back = (today_money / today_cost * 100).toFixed(2) + '%'
         }
 
