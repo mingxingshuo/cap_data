@@ -7,6 +7,7 @@ router.post('/create', async(req, res, next) => {
     let url = req.body.url
     let cost = req.body.cost
     let createtime = req.body.createtime
+    console.log(createtime,'------------------createtime')
     let data = {
         url: url,
         cost: cost,
@@ -14,7 +15,7 @@ router.post('/create', async(req, res, next) => {
     }
     let doc = await CostModel.create(data)
     if (doc) {
-        tongji.tongji()
+        tongji.tongji({url:url})
         res.send({success: '创建成功', data: doc})
     } else {
         res.send({err: '创建失败'})

@@ -5,9 +5,8 @@ const LinkModel = require('../model/link')
 const CostModel = require('../model/cost')
 const TongjiModel = require('../model/tongji')
 
-async function tongji() {
-    let arr = []
-    let links = await LinkModel.find()
+async function tongji(con={}) {
+    let links = await LinkModel.find(con)
     for (let link of links) {
         console.log(link, '--------------link')
         let Baidu = await BaiduModel.find({url: link.out_url}).limit(1).sort({time: -1})
@@ -46,11 +45,13 @@ async function tongji() {
             today_back = (today_money / today_cost * 100).toFixed(2) + '%'
         }
 
+        let format = o.Y + "-" + o.M + "-" + o.D + " " + o.h + ":" + o.m + ":" + o.s
         let data = {
             url: link.url,
             out_url: link.out_url,
             qudao: link.qudao,
             fuwuhao: link.fuwuhao,
+            linktime:link.createtime,
             pv: Baidu[0].pv,
             uv: Baidu[0].uv,
             ip_count: Baidu[0].ip_count,
@@ -67,10 +68,11 @@ async function tongji() {
             platform: link.platform,
             createtime: timestamp_date()
         }
-        arr.push(data)
-        // console.log(arr, '----------------')
+        await TongjiModel.update({
+            url:link.url,
+            createtime: timestamp_date()
+        },data,{upsert:true})
     }
-    await TongjiModel.update(arr,{upsert:true})
 }
 
 function timestamp_date() {
