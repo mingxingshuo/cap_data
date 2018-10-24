@@ -9,9 +9,9 @@ async function get_sites() {
         body: JSON.stringify({
             "header": {
                 "account_type": 1,
-                "password": "0309Cong",
-                "token": "8db71199d2ec84df3996a16738628ba8",
-                "username": "zhangzicong6"
+                "password": "Mingxingshuo1234",
+                "token": "fed4214f12d732966afcffb15159190e",
+                "username": "北京明星说"
             }
         })
     }
