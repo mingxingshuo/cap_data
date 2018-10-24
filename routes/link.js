@@ -40,6 +40,40 @@ router.post('/create', async(req, res, next) => {
     }
 })
 
+router.post('/update', async(req, res, next) => {
+    let id = req.body.id
+    let url = req.body.url
+    let out_url = req.body.out_url
+    let qudao = req.body.qudao
+    let fuwuhao = req.body.fuwuhao
+    let platform = req.body.platform
+    let createtime = new Date(req.body.createtime)
+    var o = {
+        "Y": createtime.getFullYear(),
+        "M": (createtime.getMonth() + 1) >= 10 ? String(createtime.getMonth() + 1) : '0' + (createtime.getMonth() + 1),
+        "D": createtime.getDate() >= 10 ? String(createtime.getDate()) : '0' + createtime.getDate(),
+        "h": createtime.getHours() > 10 ? createtime.getHours() : '0' + createtime.getHours(),
+        "m": createtime.getMinutes() > 10 ? createtime.getMinutes() : '0' + createtime.getMinutes(),
+        "s": createtime.getSeconds() > 10 ? createtime.getSeconds() : '0' + createtime.getSeconds()
+    }
+    let format = o.Y + "-" + o.M + "-" + o.D + " " + o.h + ":" + o.m + ":" + o.s
+    let data = {
+        url: url,
+        out_url: out_url,
+        qudao:qudao,
+        fuwuhao:fuwuhao,
+        platform: platform,
+        createtime: format,
+        time: timestamp_date()
+    }
+    let doc = await LinkModel.findByIdAndUpdate(id,data)
+    if (doc) {
+        res.send({success: '修改成功', data: doc})
+    } else {
+        res.send({err: '修改失败'})
+    }
+})
+
 router.get('/del', async(req, res, next) => {
     let id = req.query.id
     var doc = await LinkModel.findByIdAndRemove(id)

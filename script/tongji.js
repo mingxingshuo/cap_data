@@ -70,7 +70,7 @@ async function tongji() {
         arr.push(data)
         // console.log(arr, '----------------')
     }
-    await TongjiModel.create(arr)
+    await TongjiModel.update(arr,{upsert:true})
 }
 
 function timestamp_date() {
@@ -89,11 +89,19 @@ function date_zero() {
     return today.getTime();
 }
 
-var rule = new schedule.RecurrenceRule();
-var times = [0, 15, 30, 45];
-rule.minute = times;
-schedule.scheduleJob(rule, function () {
-    console.log('创建统计信息');
-    tongji()
-});
+function start() {
+    var rule = new schedule.RecurrenceRule();
+    var times = [0, 15, 30, 45];
+    rule.minute = times;
+    schedule.scheduleJob(rule, function () {
+        console.log('创建统计信息');
+        tongji()
+    });
+}
+
+module.exports ={
+    start :start,
+    tongji : tongji
+}
+
 // tongji()
