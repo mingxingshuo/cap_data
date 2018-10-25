@@ -10,7 +10,6 @@ var DaishuSchema = new Schema({
     count_pay:Number, //付款数量
     yuedu:Number, //阅读数
     money:Number,  //付款金额
-    platform:Number, //6袋鼠
     createtime:Number, //创建时间
     time:Number //记录时间
 });

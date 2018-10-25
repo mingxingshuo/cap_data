@@ -5,12 +5,12 @@ const LinkModel = require('../model/link')
 const CostModel = require('../model/cost')
 const TongjiModel = require('../model/tongji')
 
-async function tongji(con={}) {
+async function tongji(con = {}) {
     let links = await LinkModel.find(con)
     for (let link of links) {
         console.log(link, '--------------link')
         var arr = link.out_url.split('/')
-        var baidu_url = arr[arr.length-2]+'/'+arr[arr.length-1]
+        var baidu_url = arr[arr.length - 2] + '/' + arr[arr.length - 1]
         console.log(baidu_url)
         let Baidu = await BaiduModel.find({url: baidu_url}).limit(1).sort({time: -1})
         let Daishu = await DaishuModel.find({url: link.url}).limit(1).sort({time: -1})
@@ -53,8 +53,8 @@ async function tongji(con={}) {
             url: link.url,
             out_url: link.out_url,
             qudao: link.qudao,
-            fuwuhao: link.fuwuhao,
-            linktime:link.createtime,
+            name: link.name,
+            linktime: link.createtime,
             pv: Baidu[0].pv,
             uv: Baidu[0].uv,
             ip_count: Baidu[0].ip_count,
@@ -68,13 +68,12 @@ async function tongji(con={}) {
             today_money: today_money,
             today_cost: today_cost,
             today_back: today_back,
-            platform: link.platform,
             createtime: timestamp_date()
         }
         await TongjiModel.update({
-            url:link.url,
+            url: link.url,
             createtime: timestamp_date()
-        },data,{upsert:true})
+        }, data, {upsert: true})
     }
 }
 
@@ -96,7 +95,7 @@ function date_zero() {
 
 function start() {
     var rule = new schedule.RecurrenceRule();
-    var times = [0, 15, 30, 45];
+    var times = [3, 8, 13, 18, 23, 28, 33, 38, 43, 48, 53, 58];
     rule.minute = times;
     schedule.scheduleJob(rule, function () {
         console.log('创建统计信息');
@@ -104,9 +103,7 @@ function start() {
     });
 }
 
-module.exports ={
-    start :start,
-    tongji : tongji
+module.exports = {
+    start: start,
+    tongji: tongji
 }
-
-tongji({url:"https://wx8a66d703c33ea318.klunf.com/t/2723742"})

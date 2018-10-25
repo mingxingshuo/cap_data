@@ -2,28 +2,46 @@ const rp = require('request-promise-any')
 const async = require('async');
 const cheerio = require('cheerio')
 const schedule = require("node-schedule");
+const userModel = require('../model/user')
 const daishuModel = require('../model/daishu')
+const orderModel = require('../model/order')
 var j = rp.jar()
-var cookie_string;
+var cookies = {};
 
 
-// get_data(function(data){
-//     console.log(data)
+// get_data(username,password,function (data) {
+//     // console.log(data,'-----------------data')
+//     let row = data.rows[0]
+//     console.log(row)
+//     let orders = row.normal_recharge_orders_count + row.vip_recharge_orders_count
+//     let pay_orders = row.normal_recharge_orders + row.vip_recharge_orders
+//     let pay_rate = "0.00%"
+//     if (orders && pay_orders) {
+//         pay_rate = (pay_orders / orders * 100).toFixed(2) + '%'
+//     }
+//     var doc = {
+//         id: row.admin_id,
+//         createdate: row.createdate,
+//         money: row.recharge_money, //总充值
+//         orders: orders, //订单数
+//         pay_orders: pay_orders, //支付数
+//         pay_rate: pay_rate
+//     }
 // })
 
 // get_link(0, function (data) {
 //     console.log(data)
 // })
 
-function get_cookie() {
+function get_cookie(username) {
     return new Promise((resolve, reject) => {
         var url = 'https://www.ziread.cn/admin/index/login?url=%2Fadmin%2Findex'
         rp({url: url, jar: j})
             .then(function (body) {
-                cookie_string = j.getCookieString(url)
+                cookies[username] = j.getCookieString(url)
                 var $ = cheerio.load(body)
                 var token = $('input[name="__token__"]').attr("value")
-                resolve({cookie: cookie_string, token: token})
+                resolve({cookie: cookies[username], token: token})
             })
             .catch(function (err) {
                 reject(err)
@@ -32,7 +50,7 @@ function get_cookie() {
 }
 
 async function login_byCookie(...func) {
-    var s_o = await get_cookie()
+    var s_o = await get_cookie(func[1])
     console.log('------get token------\r\n')
     var url = 'https://www.ziread.cn/admin/index/login'
     var options = {
@@ -49,26 +67,31 @@ async function login_byCookie(...func) {
             "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.140 Safari/537.36"
         },
         body: JSON.stringify({
-            username: 'mingxing',
-            password: '123456',
+            username: func[1],
+            password: func[2],
             __token__: s_o.token,
             keeplogin: 1
         })
     }
-    options.headers.Cookie = cookie_string
+    options.headers.Cookie = cookies[func[1]]
     var body = await rp(options)
+    console.log(JSON.parse(body).data.id)
+    let users = await userModel.update({username:func[1]},{admin_id:JSON.parse(body).data.id})
     cookie_string = j.getCookieString(url)
     console.log('------to do func-------')
-    if (func.length == 1) {
-        func[0]()
-    } else if (func.length == 2) {
-        func[0](func[1])
-    } else if (func.length == 3) {
+    if (func.length == 3) {
         func[0](func[1], func[2])
+        //0:函数,1:username,2:password
+    } else if (func.length == 4) {
+        //0:函数,1:username,2:password,3页数
+        func[0](func[1], func[2], func[3])
+    } else if (func.length == 5) {
+        //0:函数,1:username,2:password,3页数4返回
+        func[0](func[1], func[2], func[3], func[4])
     }
 }
 
-async function get_data(cb) {
+async function get_data(username, password, cb) {
     console.log('-------get_data func-------\r\n')
     var url = 'https://www.ziread.cn/admin/collect/index?channel_id=0&sort=createdate&order=desc&offset=0&limit=10&_=' + Date.now()
     var options = {
@@ -84,18 +107,32 @@ async function get_data(cb) {
             "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.140 Safari/537.36"
         }//伪造请求头
     };
-    options.headers.Cookie = cookie_string
+    options.headers.Cookie = cookies[username]
     var body = await rp(options)
-    var data;
     if (isJSON(body)) {
-        data = JSON.parse(body)
+        let row = JSON.parse(data).rows[0]
+        console.log(row)
+        let orders = row.normal_recharge_orders_count + row.vip_recharge_orders_count
+        let pay_orders = row.normal_recharge_orders + row.vip_recharge_orders
+        let pay_rate = "0.00%"
+        if (orders && pay_orders) {
+            pay_rate = (pay_orders / orders * 100).toFixed(2) + '%'
+        }
+        var doc = {
+            id: row.admin_id,
+            createdate: row.createdate,
+            money: row.recharge_money, //总充值
+            orders: orders, //订单数
+            pay_orders: pay_orders, //支付数
+            pay_rate: pay_rate
+        }
         cb(data)
     } else {
-        await login_byCookie(arguments.callee, cb)
+        await login_byCookie(arguments.callee, username, password, cb)
     }
 }
 
-async function get_link(offset, cb) {
+async function get_link(username, password, offset, cb) {
     console.log('-------get_link func-------\r\n')
     var url = 'https://www.ziread.cn/admin/referral/referral/index?sort=id&order=desc&offset=' + offset + '&limit=10&_=' + Date.now()
     var options = {
@@ -111,7 +148,7 @@ async function get_link(offset, cb) {
             "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.140 Safari/537.36"
         }//伪造请求头
     };
-    options.headers.Cookie = cookie_string
+    options.headers.Cookie = cookies[username]
     var body = await rp(options)
     var data;
     var flag = true
@@ -119,17 +156,15 @@ async function get_link(offset, cb) {
     if (isJSON(body)) {
         data = JSON.parse(body)
         for (let d of data.rows) {
-            console.log(data,'daishu data---------------')
             if (parseInt(Date.now() / 1000) - d.createtime <= 48 * 3600) {
-                let total = await get_linkdata(d.id)
+                let total = await get_linkdata(username, password, d.id)
                 let savedata = {
                     id: d.id,
                     url: d.short_url,
-                    yuedu:d.uv,
                     count_order: total.count_order,
                     count_pay: total.count_pay,
+                    yuedu: d.uv,
                     money: parseFloat(d.money).toFixed(2),
-                    platform:6,
                     createtime: d.createtime * 1000,
                     time: timestamp_date()
                 }
@@ -138,11 +173,10 @@ async function get_link(offset, cb) {
                 let savedata = {
                     id: d.id,
                     url: d.short_url,
-                    yuedu:d.uv,
                     count_order: 0,
                     count_pay: 0,
+                    yuedu: d.uv,
                     money: parseFloat(d.money).toFixed(2),
-                    platform:6,
                     createtime: d.createtime * 1000,
                     time: timestamp_date()
                 }
@@ -152,18 +186,19 @@ async function get_link(offset, cb) {
                 break
             }
         }
-        await daishuModel.create(arr)
+        console.log(arr)
+        // await daishuModel.create(arr)
         if (flag) {
-            get_link(offset + 10, cb)
+            get_link(username,password, offset + 10, cb)
         } else {
             cb('end')
         }
     } else {
-        await login_byCookie(arguments.callee, offset, cb)
+        await login_byCookie(arguments.callee, username, password, offset, cb)
     }
 }
 
-async function get_linkdata(id) {
+async function get_linkdata(username, password, id) {
     console.log('-------get_linkdata func-------\r\n')
     var url = 'https://www.ziread.cn/admin/orders/index?ids=' + id + 'ref=addtabs&_=' + Date.now()
     var url_pay = 'https://www.ziread.cn/admin/orders/index?ids=' + id + '&ref=addtabs&filter=%7B%22state%22%3A%221%22%7D&op=%7B%22state%22%3A%22%3D%22%7D&_=' + Date.now()
@@ -180,7 +215,7 @@ async function get_linkdata(id) {
             "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.140 Safari/537.36"
         }//伪造请求头
     };
-    options.headers.Cookie = cookie_string
+    options.headers.Cookie = cookies[username]
     var body = await rp(options)
 
     var options_pay = {
@@ -208,7 +243,7 @@ async function get_linkdata(id) {
             resolve({count_order: data.total, count_pay: data_pay.total})
         })
     } else {
-        await login_byCookie(arguments.callee)
+        await login_byCookie(arguments.callee, username, password)
     }
 }
 
@@ -237,12 +272,12 @@ function timestamp_date() {
 var rule = new schedule.RecurrenceRule();
 var times = [0, 15, 30, 45];
 rule.minute = times;
-schedule.scheduleJob(rule, function () {
+schedule.scheduleJob(rule, async function () {
     console.log('创建袋鼠统计信息');
-    get_link(0, function (data) {
-        console.log(data)
+    let users = await userModel.find()
+    async.eachLimit(users, 3, function (user, callback) {
+        get_link(user.username, user.password, 0, function (data) {
+            console.log(data)
+        })
     })
 });
-// get_link(0, function (data) {
-//     console.log(data)
-// })

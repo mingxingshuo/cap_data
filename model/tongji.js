@@ -7,7 +7,7 @@ var TongjiSchema = new Schema({
 	url:String,
     out_url:String,
     qudao:String, //渠道名
-    fuwuhao:String, //服务号名
+    name:String,//平台+服务号
     pv:Number,  //pv数量
     uv:Number, //uv数量
     ip_count:Number,  //ip数量
@@ -21,7 +21,6 @@ var TongjiSchema = new Schema({
     today_money:Number, //今日充值
     today_cost:Number, //今日成本
     today_back:String, //动态回本率
-    platform:Number,
     linktime: String,
     createtime:Number //创建时间
 });

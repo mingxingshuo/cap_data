@@ -11,8 +11,7 @@ router.post('/create', async(req, res, next) => {
     let url = req.body.url
     let out_url = req.body.out_url
     let qudao = req.body.qudao
-    let fuwuhao = req.body.fuwuhao
-    let platform = req.body.platform
+    let name = req.body.name
     let createtime = new Date(req.body.createtime)
     var o = {
         "Y": createtime.getFullYear(),
@@ -27,8 +26,7 @@ router.post('/create', async(req, res, next) => {
         url: url,
         out_url: out_url,
         qudao:qudao,
-        fuwuhao:fuwuhao,
-        platform: platform,
+        name: name,
         createtime: format,
         time: timestamp_date()
     }
@@ -47,8 +45,7 @@ router.post('/update', async(req, res, next) => {
     let url = req.body.url
     let out_url = req.body.out_url
     let qudao = req.body.qudao
-    let fuwuhao = req.body.fuwuhao
-    let platform = req.body.platform
+    let name = req.body.name
     let createtime = new Date(req.body.createtime)
     var o = {
         "Y": createtime.getFullYear(),
@@ -63,8 +60,7 @@ router.post('/update', async(req, res, next) => {
         url: url,
         out_url: out_url,
         qudao:qudao,
-        fuwuhao:fuwuhao,
-        platform: platform,
+        name:name,
         createtime: format,
         time: timestamp_date()
     }
