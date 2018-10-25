@@ -1,11 +1,20 @@
 const express = require('express');
 const router = express.Router();
 const TongjiModel = require('../model/tongji')
+const LinkModel = require('../model/link')
 
 router.get('/', async(req, res, next) => {
     let url = req.query.url
-    let doc = await TongjiModel.find({url: url}).limit(1).sort({createtime: -1})
-    res.send({data: doc})
+    let link = await LinkModel.find({url: url})
+    let qudao = link[0].qudao || ""
+    let name = link[0].name || ""
+    let linktime = link[0].createtime || ""
+    let tongji = await TongjiModel.find({url: url}).limit(1).sort({createtime: -1})
+    let obj = tongji[0]
+    obj.qudao = qudao
+    obj.name = name
+    obj.linktime = linktime
+    res.send({data: obj})
 })
 
 module.exports = router;

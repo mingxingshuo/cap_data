@@ -16,6 +16,12 @@ async function tongji(con = {}) {
         let Daishu = await DaishuModel.find({url: link.url}).limit(1).sort({time: -1})
         let zeroDaishu = await DaishuModel.find({url: link.url, time: date_zero()})
         let today_money = Daishu[0].money - zeroDaishu[0].money
+        let pv = 0
+        let uv = 0
+        if(Baidu.length){
+            pv = Baidu[0].pv
+            uv = Baidu[0].uv
+        }
         console.log(Baidu, '--------------Baidu')
         console.log(Daishu, '--------------Daishu')
         console.log(zeroDaishu, '--------------zeroDaishu')
@@ -48,15 +54,11 @@ async function tongji(con = {}) {
             today_back = (today_money / today_cost * 100).toFixed(2) + '%'
         }
 
-        //let format = o.Y + "-" + o.M + "-" + o.D + " " + o.h + ":" + o.m + ":" + o.s
         let data = {
             url: link.url,
             out_url: link.out_url,
-            qudao: link.qudao,
-            name: link.name,
-            linktime: link.createtime,
-            pv: Baidu[0].pv,
-            uv: Baidu[0].uv,
+            pv: pv,
+            uv: uv,
             ip_count: Baidu[0].ip_count,
             count_order: count_order,
             count_pay: count_pay,
