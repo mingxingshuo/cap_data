@@ -8,6 +8,7 @@ router.get('/', async(req, res, next) => {
 })
 
 router.post('/create', async(req, res, next) => {
+    console.log(req.body.data.url)
     let url = req.body.url
     let out_url = req.body.out_url
     let qudao = req.body.qudao
@@ -32,7 +33,9 @@ router.post('/create', async(req, res, next) => {
         createtime: format,
         time: timestamp_date()
     }
+    // console.log(data)
     let doc = await LinkModel.create(data)
+    // console.log('doc', doc)
     if (doc) {
         res.send({success: '创建成功', data: doc})
     } else {

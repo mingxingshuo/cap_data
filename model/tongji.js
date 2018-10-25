@@ -22,6 +22,7 @@ var TongjiSchema = new Schema({
     today_cost:Number, //今日成本
     today_back:String, //动态回本率
     platform:Number,
+    linktime: String,
     createtime:Number //创建时间
 });
 
