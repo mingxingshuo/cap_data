@@ -8,7 +8,6 @@ router.get('/', async(req, res, next) => {
 })
 
 router.post('/create', async(req, res, next) => {
-    console.log(req.body.url)
     let url = req.body.url
     let out_url = req.body.out_url
     let qudao = req.body.qudao
