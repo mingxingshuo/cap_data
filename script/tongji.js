@@ -23,7 +23,7 @@ async function tongji(con={}) {
             createtime: {$lt: date_zero()}
         }).limit(1).sort({createtime: -1})
         let today_cost = Cost[0].cost || 0
-        if (Cost[0].cost && yesterdayCost) {
+        if (Cost[0] && Cost[0].cost && yesterdayCost[0] && yesterdayCost[0].cost) {
             today_cost = Cost[0].cost - yesterdayCost[0].cost
         }
         console.log(Cost, '--------------Cost')
@@ -45,7 +45,7 @@ async function tongji(con={}) {
             today_back = (today_money / today_cost * 100).toFixed(2) + '%'
         }
 
-        let format = o.Y + "-" + o.M + "-" + o.D + " " + o.h + ":" + o.m + ":" + o.s
+        //let format = o.Y + "-" + o.M + "-" + o.D + " " + o.h + ":" + o.m + ":" + o.s
         let data = {
             url: link.url,
             out_url: link.out_url,
@@ -106,4 +106,4 @@ module.exports ={
     tongji : tongji
 }
 
-// tongji()
+tongji({url:"https://wx8a66d703c33ea318.klunf.com/t/2723742"})
