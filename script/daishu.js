@@ -4,6 +4,7 @@ const cheerio = require('cheerio')
 const schedule = require("node-schedule");
 const userModel = require('../model/user')
 const daishuModel = require('../model/daishu')
+const linkModel = require('../model/link')
 const orderModel = require('../model/order')
 var j = rp.jar()
 var cookies = {};
@@ -54,10 +55,7 @@ async function login_byCookie(...func) {
     }
     options.headers.Cookie = cookies[func[1]]
     var body = await rp(options)
-    console.log(JSON.parse(body).data.id)
-    let users = await userModel.update({username:func[1]},{admin_id:JSON.parse(body).data.id})
     cookie_string = j.getCookieString(url)
-    console.log('------to do func-------')
     if (func.length == 3) {
         func[0](func[1], func[2])
         //0:函数,1:username,2:password
@@ -69,7 +67,9 @@ async function login_byCookie(...func) {
         func[0](func[1], func[2], func[3], func[4])
     }
 }
-
+get_data('mingxing',123456,function (data) {
+    console.log(data,'-------------data')
+})
 async function get_data(username, password, cb) {
     console.log('-------get_data func-------\r\n')
     var url = 'https://www.ziread.cn/admin/collect/index?channel_id=0&sort=createdate&order=desc&offset=0&limit=10&_=' + Date.now()
@@ -89,23 +89,24 @@ async function get_data(username, password, cb) {
     options.headers.Cookie = cookies[username]
     var body = await rp(options)
     if (isJSON(body)) {
-        let row = JSON.parse(data).rows[0]
-        console.log(row)
+        let row = JSON.parse(body).rows[0]
         let orders = row.normal_recharge_orders_count + row.vip_recharge_orders_count
         let pay_orders = row.normal_recharge_orders + row.vip_recharge_orders
         let pay_rate = "0.00%"
         if (orders && pay_orders) {
             pay_rate = (pay_orders / orders * 100).toFixed(2) + '%'
         }
+        // let link = await LinkModel.find({url: url})
         var doc = {
-            id: row.admin_id,
+            name:name,
             createdate: row.createdate,
             money: row.recharge_money, //总充值
             orders: orders, //订单数
             pay_orders: pay_orders, //支付数
             pay_rate: pay_rate
         }
-        cb(data)
+        // await orderModel.create(data)
+        cb(doc)
     } else {
         await login_byCookie(arguments.callee, username, password, cb)
     }
@@ -269,7 +270,7 @@ schedule.scheduleJob(rule1, async function () {
     let users = await userModel.find()
     async.eachLimit(users, 3, function (user, callback) {
         get_data(user.username, user.password, function (data) {
-            console.log(data)
+            console.log(data,'-------------')
         })
     })
 });
