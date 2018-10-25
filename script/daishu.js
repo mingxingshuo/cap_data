@@ -67,10 +67,10 @@ async function login_byCookie(...func) {
         func[0](func[1], func[2], func[3], func[4])
     }
 }
-get_data('mingxing',123456,function (data) {
-    console.log(data,'-------------data')
+get_data('mingxing', 123456,'测试', function (data) {
+    console.log(data, '-------------data')
 })
-async function get_data(username, password, cb) {
+async function get_data(username, password, name, cb) {
     console.log('-------get_data func-------\r\n')
     var url = 'https://www.ziread.cn/admin/collect/index?channel_id=0&sort=createdate&order=desc&offset=0&limit=10&_=' + Date.now()
     var options = {
@@ -96,19 +96,19 @@ async function get_data(username, password, cb) {
         if (orders && pay_orders) {
             pay_rate = (pay_orders / orders * 100).toFixed(2) + '%'
         }
-        // let link = await LinkModel.find({url: url})
         var doc = {
-            name:name,
+            username: username,
+            name: name,
             createdate: row.createdate,
             money: row.recharge_money, //总充值
             orders: orders, //订单数
             pay_orders: pay_orders, //支付数
             pay_rate: pay_rate
         }
-        // await orderModel.create(data)
+        await orderModel.update({username:username,createdate:row.createdate},doc,{upsert: true})
         cb(doc)
     } else {
-        await login_byCookie(arguments.callee, username, password, cb)
+        await login_byCookie(arguments.callee, username, password, name, cb)
     }
 }
 
@@ -169,7 +169,7 @@ async function get_link(username, password, offset, cb) {
         // console.log(arr)
         await daishuModel.create(arr)
         if (flag) {
-            get_link(username,password, offset + 10, cb)
+            get_link(username, password, offset + 10, cb)
         } else {
             cb('end')
         }
@@ -269,8 +269,8 @@ schedule.scheduleJob(rule1, async function () {
     console.log('袋鼠订单信息');
     let users = await userModel.find()
     async.eachLimit(users, 3, function (user, callback) {
-        get_data(user.username, user.password, function (data) {
-            console.log(data,'-------------')
+        get_data(user.username, user.password, user.name, function (data) {
+            console.log(data, '-------------')
         })
     })
 });
