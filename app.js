@@ -12,6 +12,7 @@ var tongji = require('./routes/tongji');
 var consume = require('./routes/consume');
 var statistics = require('./routes/statistics');
 var user = require('./routes/user');
+var order = require('./routes/order');
 var app = express();
 
 app.all('*', function(req, res, next) {
@@ -49,6 +50,7 @@ app.use('/tongji', tongji);
 app.use('/consume', consume);
 app.use('/statistics', statistics);
 app.use('/user', user);
+app.use('/order', order);
 
 app.use(express.static(path.join(__dirname, 'public')));
 

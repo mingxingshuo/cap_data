@@ -3,7 +3,7 @@ const router = express.Router();
 const UserModel = require('../model/user');
 
 router.get('/', async(req, res, next) => {
-    let doc = await LinkModel.find()
+    let doc = await UserModel.find()
     res.send({data: doc})
 })
 

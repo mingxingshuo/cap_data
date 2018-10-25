@@ -8,27 +8,6 @@ const orderModel = require('../model/order')
 var j = rp.jar()
 var cookies = {};
 
-
-// get_data(username,password,function (data) {
-//     // console.log(data,'-----------------data')
-//     let row = data.rows[0]
-//     console.log(row)
-//     let orders = row.normal_recharge_orders_count + row.vip_recharge_orders_count
-//     let pay_orders = row.normal_recharge_orders + row.vip_recharge_orders
-//     let pay_rate = "0.00%"
-//     if (orders && pay_orders) {
-//         pay_rate = (pay_orders / orders * 100).toFixed(2) + '%'
-//     }
-//     var doc = {
-//         id: row.admin_id,
-//         createdate: row.createdate,
-//         money: row.recharge_money, //总充值
-//         orders: orders, //订单数
-//         pay_orders: pay_orders, //支付数
-//         pay_rate: pay_rate
-//     }
-// })
-
 // get_link(0, function (data) {
 //     console.log(data)
 // })
@@ -83,7 +62,7 @@ async function login_byCookie(...func) {
         func[0](func[1], func[2])
         //0:函数,1:username,2:password
     } else if (func.length == 4) {
-        //0:函数,1:username,2:password,3页数
+        //0:函数,1:username,2:password,3返回
         func[0](func[1], func[2], func[3])
     } else if (func.length == 5) {
         //0:函数,1:username,2:password,3页数4返回
@@ -186,8 +165,8 @@ async function get_link(username, password, offset, cb) {
                 break
             }
         }
-        console.log(arr)
-        // await daishuModel.create(arr)
+        // console.log(arr)
+        await daishuModel.create(arr)
         if (flag) {
             get_link(username,password, offset + 10, cb)
         } else {
@@ -277,6 +256,19 @@ schedule.scheduleJob(rule, async function () {
     let users = await userModel.find()
     async.eachLimit(users, 3, function (user, callback) {
         get_link(user.username, user.password, 0, function (data) {
+            console.log(data)
+        })
+    })
+});
+
+var rule1 = new schedule.RecurrenceRule();
+var times1 = [1];
+rule1.hour = times1;
+schedule.scheduleJob(rule1, async function () {
+    console.log('袋鼠订单信息');
+    let users = await userModel.find()
+    async.eachLimit(users, 3, function (user, callback) {
+        get_data(user.username, user.password, function (data) {
             console.log(data)
         })
     })
