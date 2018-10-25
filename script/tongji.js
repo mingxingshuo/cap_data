@@ -9,7 +9,10 @@ async function tongji(con={}) {
     let links = await LinkModel.find(con)
     for (let link of links) {
         console.log(link, '--------------link')
-        let Baidu = await BaiduModel.find({url: link.out_url}).limit(1).sort({time: -1})
+        var arr = link.out_url.split('/')
+        var baidu_url = arr[arr.length-2]+'/'+arr[arr.length-1]
+        console.log(baidu_url)
+        let Baidu = await BaiduModel.find({url: baidu_url}).limit(1).sort({time: -1})
         let Daishu = await DaishuModel.find({url: link.url}).limit(1).sort({time: -1})
         let zeroDaishu = await DaishuModel.find({url: link.url, time: date_zero()})
         let today_money = Daishu[0].money - zeroDaishu[0].money
