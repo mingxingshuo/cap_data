@@ -67,9 +67,9 @@ async function login_byCookie(...func) {
         func[0](func[1], func[2], func[3], func[4])
     }
 }
-get_data('mingxing', 123456,'测试', function (data) {
-    console.log(data, '-------------data')
-})
+// get_data('mingxing', 123456,'测试', function (data) {
+//     console.log(data, '-------------data')
+// })
 async function get_data(username, password, name, cb) {
     console.log('-------get_data func-------\r\n')
     var url = 'https://www.ziread.cn/admin/collect/index?channel_id=0&sort=createdate&order=desc&offset=0&limit=10&_=' + Date.now()

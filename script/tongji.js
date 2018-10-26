@@ -14,17 +14,17 @@ async function tongji(con = {}) {
         console.log(baidu_url)
         let Baidu = await BaiduModel.find({url: baidu_url}).limit(1).sort({time: -1})
         let Daishu = await DaishuModel.find({url: link.url}).limit(1).sort({time: -1})
-        let zeroDaishu = await DaishuModel.find({url: link.url, time: date_zero()})
-        let today_money = Daishu[0].money - zeroDaishu[0].money
-        let pv = 0
-        let uv = 0
-        if(Baidu.length){
-            pv = Baidu[0].pv
-            uv = Baidu[0].uv
-        }
+        let zeroDaishu = await DaishuModel.find({url: link.url, time: {$lte: date_zero()}}).limit(1).sort({time: -1})
         console.log(Baidu, '--------------Baidu')
         console.log(Daishu, '--------------Daishu')
         console.log(zeroDaishu, '--------------zeroDaishu')
+        let today_money = Daishu[0].money - zeroDaishu[0].money
+        let pv = 0
+        let uv = 0
+        if (Baidu.length) {
+            pv = Baidu[0].pv
+            uv = Baidu[0].uv
+        }
         console.log(today_money, '--------------today_money')
         let Cost = await CostModel.find({url: link.url}).limit(1).sort({createtime: -1})
         let yesterdayCost = await CostModel.find({
@@ -104,7 +104,7 @@ function start() {
         tongji()
     });
 }
-
+tongji()
 module.exports = {
     start: start,
     tongji: tongji
