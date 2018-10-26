@@ -27,17 +27,17 @@ async function tongji(con = {}) {
         }
         console.log(today_money, '--------------today_money')
         let Cost = await CostModel.find({url: link.url}).limit(1).sort({createtime: -1})
-        let yesterdayCost = await CostModel.find({
-            url: link.url,
-            createtime: {$lt: date_zero()}
-        }).limit(1).sort({createtime: -1})
-        let today_cost = Cost[0].cost || 0
-        if (Cost[0] && Cost[0].cost && yesterdayCost[0] && yesterdayCost[0].cost) {
-            today_cost = Cost[0].cost - yesterdayCost[0].cost
-        }
+        // let yesterdayCost = await CostModel.find({
+        //     url: link.url,
+        //     createtime: {$lt: date_zero()}
+        // }).limit(1).sort({createtime: -1})
+        // let today_cost = Cost[0].cost || 0
+        // if (Cost[0] && Cost[0].cost && yesterdayCost[0] && yesterdayCost[0].cost) {
+        //     today_cost = Cost[0].cost - yesterdayCost[0].cost
+        // }
         console.log(Cost, '--------------Cost')
-        console.log(yesterdayCost, '--------------yesterday_Cost')
-        console.log(today_cost, '--------------today_cost')
+        // console.log(yesterdayCost, '--------------yesterday_Cost')
+        // console.log(today_cost, '--------------today_cost')
 
         let count_order = Daishu[0].count_order || 0
         let count_pay = Daishu[0].count_pay || 0
@@ -49,10 +49,10 @@ async function tongji(con = {}) {
         if (Daishu[0].money && Cost[0].cost) {
             back = (Daishu[0].money / Cost[0].cost * 100).toFixed(2) + '%'
         }
-        let today_back = '0.00%'
-        if (today_money && today_cost) {
-            today_back = (today_money / today_cost * 100).toFixed(2) + '%'
-        }
+        // let today_back = '0.00%'
+        // if (today_money && today_cost) {
+        //     today_back = (today_money / today_cost * 100).toFixed(2) + '%'
+        // }
 
         let data = {
             url: link.url,
@@ -68,8 +68,8 @@ async function tongji(con = {}) {
             cost: Cost[0].cost,
             back: back,
             today_money: today_money,
-            today_cost: today_cost,
-            today_back: today_back,
+            // today_cost: today_cost,
+            // today_back: today_back,
             createtime: timestamp_date()
         }
         await TongjiModel.update({
